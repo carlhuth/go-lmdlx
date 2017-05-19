@@ -1,4 +1,11 @@
-# mdlx
+# Lmdlx
 
-This will become a golang markdown lexer for use by essential-web apps
-It can be used by anybody though. Docs coming out soon, when the program is finished
+A minimalist golang markdown lexer. Supports only paragraph embellishments such as italics, bold.
+
+An example program is in `cmd/lmdlx`
+
+# Usage
+
+
+You should have a proper GOPATH, and the repo should be cloned to `$GOPATH/src/github.com/liamnaddell/go-lmdlx`
+Info on gopaths is here: [How to Write Go Code](https://golang.org/doc/code.html)

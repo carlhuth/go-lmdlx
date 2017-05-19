@@ -1,6 +1,6 @@
 package main
 
-import "github.com/liamnaddell/go-lmdlx/lmdlx"
+import "github.com/liamnaddell/go-lmdlx"
 import "io/ioutil"
 import "log"
 import "fmt"
