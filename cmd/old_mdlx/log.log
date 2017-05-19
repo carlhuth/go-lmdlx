@@ -1,0 +1,44 @@
+<!Doctype html>
+<h2>an h1 header</h2>
+
+\n wait a minute...
+
+<code>backticked code</code>
+2 to the 1, to the one two three
+<code>moar backticked code</code>
+
+I am a <b>bold</b> person
+
+*
+I am a syntax error, and subsequently am not bold
+*
+
+
+emoji tests:
+🚧 💬 ⛔  🖐 👓 💪 📖 🍎 ✅ 💡📝
+^ the emoji tester looks bad in vim
+
+Lists. this 1. is not a list item, but the list below is, I wonder why
+
+-list.item[]-. This is the first item 
+-list.item[]-. This is the second item
+-list.item[]-. This is the third item
+-list.item[]-. This is the fourth item
+    -list.item[-tab-]-. This is the second forth item
+-list.item[]-. This is the fifth item. 
+
+lets take a break though.
+
+<br>
+
+The following are demonstrations of different kinds of unordered
+lists. one with a *, one with a -, and one with a +.
+
+-list.unorderedItem- DO you like WAFFLES 
+-list.unorderedItem- No
+
+-list.unorderedItem- Do you like PANCAKES
+-list.unorderedItem- No
+
+-list.unorderedItem- Do you like FRENCH TOAST
+-list.unorderedItem- No

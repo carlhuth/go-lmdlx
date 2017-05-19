@@ -1,0 +1,11 @@
+#!/usr/bin/python
+import sys
+
+try:
+    for letr in sys.argv[1]:
+        d = hex(ord(letr))
+        print(d)
+except TypeError:
+    print("Bad char, typerror")
+except IndexError:
+    print("you put nothing in")
