@@ -1,4 +1,4 @@
-package mdlx
+package lmdlx
 
 import (
 	"bytes"
@@ -161,28 +161,18 @@ func startParse(p *mParser) parserStateFn {
 		p.current = tkn
 	}
 	switch {
-	case tkn.Typ == itemHeader:
-		return parseHeader
 	case tkn.Typ == itemText:
+		return parseText
+	case tkn.Typ == itemBlockq:
 		return parseText
 	case tkn.Typ == itemNewline:
 		return parseNewline
-	case tkn.Typ == itemHeader2:
-		return parseHeader2
-	case tkn.Typ == itemHeader3:
-		return parseHeader3
-	case tkn.Typ == itemHeader4:
-		return parseHeader4
 	case tkn.Typ == itemAsterisk:
 		return parseAsterisk
 	case tkn.Typ == itemBacktick:
 		return parseBacktick
 	case tkn.Typ == itemUnderscore:
 		return parseUnderscore
-	case tkn.Typ == itemUl:
-		return parseUl
-	case tkn.Typ == itemTabUl:
-		return parseTabUl
 	}
 	p.last = tkn
 	return nil
@@ -198,97 +188,21 @@ func setPath(p *mParser, ntkn *item) {
 	subtree.Tree[ntkn.Id].Val = ntkn
 }
 
-func setHeaderPath(p *mParser, ntkn *item, wantedpos int) {
-	var basearray []*item
-	if wantedpos-1 > len(p.tree.parent) {
-		basearray = p.tree.parent[0 : wantedpos-2]
-	} else {
-		basearray = p.tree.parent[0 : wantedpos-1]
-
-	}
-	p.tree.parent = basearray
-	setPath(p, ntkn)
-	basearray = append(basearray, ntkn)
-	p.tree.parent = basearray
-}
-
-func setHeader(p *mParser, ntkn *item, wantedpos int) {
-	var basearray []*item
-	if wantedpos-1 > len(p.tree.parent) {
-		basearray = p.tree.parent[0 : wantedpos-2]
-	} else {
-		basearray = p.tree.parent[0 : wantedpos-1]
-
-	}
-	p.tree.parent = basearray
-	basearray = append(basearray, ntkn)
-	p.tree.parent = basearray
-}
-
 func parseText(p *mParser) parserStateFn {
 	ntkn := p.next()
 	setPath(p, ntkn)
 	return startParse
 }
 
-func parseUl(p *mParser) parserStateFn {
+func parseBlockq(p *mParser) parserStateFn {
 	ntkn := p.next()
-	fmt.Println("xd, ", p.tree.parent[len(p.tree.parent)-1].Id)
-	if p.tree.parent[len(p.tree.parent)-1].Typ == itemUl {
-		fmt.Println("GOING")
-		p.tree.parent = p.tree.parent[:len(p.tree.parent)-1]
-	}
 	setPath(p, ntkn)
-	return startParse
-
-}
-
-func parseTabUl(p *mParser) parserStateFn {
-	ntkn := p.next()
-	oldntkn := p.last
-	nextntkn := p.peek()
-	if oldntkn.Typ == itemUl {
-		p.oldparent = p.tree.parent
-		p.tree.parent = append(p.tree.parent, oldntkn)
-	}
-	setPath(p, ntkn)
-	if nextntkn.Typ != itemTabUl {
-		if nextntkn.Typ != itemNewline {
-			p.tree.parent = p.oldparent
-		}
-	}
-	return startParse
-}
-
-//parse header needs to set the parse tree one layer deeper, then instruct all other funcs to use that parse tree location
-func parseHeader(p *mParser) parserStateFn {
-	//get token
-	ntkn := p.next()
-	setHeaderPath(p, ntkn, 1)
 	return startParse
 }
 
 func parseUnderscore(p *mParser) parserStateFn {
 	ntkn := p.next()
 	setPath(p, ntkn)
-	return startParse
-}
-
-func parseHeader2(p *mParser) parserStateFn {
-	ntkn := p.next()
-	setHeaderPath(p, ntkn, 2)
-	return startParse
-}
-
-func parseHeader3(p *mParser) parserStateFn {
-	ntkn := p.next()
-	setHeaderPath(p, ntkn, 3)
-	return startParse
-}
-
-func parseHeader4(p *mParser) parserStateFn {
-	ntkn := p.next()
-	setHeaderPath(p, ntkn, 4)
 	return startParse
 }
 

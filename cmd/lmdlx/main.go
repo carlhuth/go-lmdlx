@@ -1,6 +1,6 @@
 package main
 
-import "github.com/essential-web/mdlx"
+import "github.com/liamnaddell/go-lmdlx/lmdlx"
 import "io/ioutil"
 import "log"
 import "fmt"
@@ -10,7 +10,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	b := mdlx.LoadBytes(ba)
+	b := lmdlx.LoadBytes(ba)
 	_ = b.Json()
 	fmt.Println(b)
 }

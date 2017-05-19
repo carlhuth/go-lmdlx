@@ -1,4 +1,4 @@
-package mdlx
+package lmdlx
 
 import (
 	"fmt"
@@ -26,16 +26,11 @@ const eof = -1
 const (
 	itemError itemType = iota
 	itemText
-	itemHeader
-	itemHeader2
-	itemHeader3
-	itemHeader4
 	itemAsterisk
 	itemUnderscore
 	itemBacktick
+	itemBlockq
 	itemNewline
-	itemUl
-	itemTabUl
 	itemEOF
 )
 
