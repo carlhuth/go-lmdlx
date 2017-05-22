@@ -2,15 +2,10 @@
 
 _Italics_
 
-> Blockquote
+~Strike~
 
 `code`
 
-~Strike~
-
-```
-multiline code
-
-```
+> Blockquote
 
 regular text

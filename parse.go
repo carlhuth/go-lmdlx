@@ -173,6 +173,8 @@ func startParse(p *mParser) parserStateFn {
 		return parseBacktick
 	case tkn.Typ == itemUnderscore:
 		return parseUnderscore
+	case tkn.Typ == itemTilda:
+		return parseTilda
 	}
 	p.last = tkn
 	return nil
@@ -189,6 +191,12 @@ func setPath(p *mParser, ntkn *item) {
 }
 
 func parseText(p *mParser) parserStateFn {
+	ntkn := p.next()
+	setPath(p, ntkn)
+	return startParse
+}
+
+func parseTilda(p *mParser) parserStateFn {
 	ntkn := p.next()
 	setPath(p, ntkn)
 	return startParse

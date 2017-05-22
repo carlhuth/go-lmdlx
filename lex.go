@@ -22,6 +22,7 @@ type lexer struct {
 type itemType int
 type stateFn func(l *lexer) stateFn
 
+//Welcome to the character definition zone
 const eof = -1
 const (
 	itemError itemType = iota
@@ -31,8 +32,15 @@ const (
 	itemBacktick
 	itemBlockq
 	itemNewline
+	itemTilda
 	itemEOF
 )
+
+//sym pos must = items pos
+var sym = []rune{'R', 'T', '*', '_', '`', '>', '\n', '~', 'E'}
+var items = []itemType{itemError, itemText, itemAsterisk, itemUnderscore, itemBacktick, itemBlockq, itemNewline, itemTilda, itemEOF}
+
+//hope you had a nice stay
 
 func (i item) String() string {
 	switch i.Typ {
@@ -47,7 +55,44 @@ func (i item) String() string {
 	return fmt.Sprintf("%q", i.Val)
 }
 
+//skip one char at the beginning
+//will also skip a space if there is one present :D
+func (l *lexer) BSkipOne() {
+	l.start++
+	l.pos = l.start
+	resv := l.peek()
+	if resv == ' ' {
+		l.start++
+	}
+	l.pos++
+}
+
+//lex a item with a left and a right delimiter
+//takes a right delimiter
+func (l *lexer) LexLRDelim(rd rune) {
+	//skip left delim
+	l.BSkipOne()
+	var rp rune
+	for {
+		_ = l.next()
+		rp = l.peek()
+		if rp == rd {
+			for i := 0; i < len(sym); i++ {
+				if rd == sym[i] {
+					l.emit(items[i])
+					break
+				}
+			}
+			l.start++
+			l.pos = l.start
+			break
+		}
+	}
+}
+
 func (l *lexer) emit(t itemType) {
+	if t == 7 {
+	}
 	l.items <- item{t, l.input[l.start:l.pos], l.id}
 	l.id++
 	l.start = l.pos

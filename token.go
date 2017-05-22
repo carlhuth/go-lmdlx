@@ -1,7 +1,6 @@
 package lmdlx
 
 import (
-	"fmt"
 	"unicode/utf8"
 )
 
@@ -11,55 +10,53 @@ func lexNewLine(l *lexer) stateFn {
 	return lexText
 }
 
+/*
 func lexAsterisk(l *lexer) stateFn {
-	l.pos++
+	l.BSkipOne()
+	var rp rune
 	for {
-		if r := l.next(); r == '\n' || r == '*' {
+		_ = l.next()
+		rp = l.peek()
+		if rp == '*' {
 			l.emit(itemAsterisk)
+			l.start++
+			l.pos = l.start
 			break
 		}
 	}
+
 	return lexText
 }
-
+*/
+func lexAsterisk(l *lexer) stateFn {
+	l.LexLRDelim('*')
+	return lexText
+}
 func lexUnderscore(l *lexer) stateFn {
-	l.pos++
-	for {
-		if r := l.next(); r == '\n' || r == '_' {
-			l.emit(itemAsterisk)
-			break
-		}
-	}
+	l.LexLRDelim('_')
 	return lexText
 }
 
 func lexBacktick(l *lexer) stateFn {
-	l.pos++
+	l.LexLRDelim('`')
+	return lexText
+}
+
+func lexBlockq(l *lexer) stateFn {
+	l.BSkipOne()
+	var rp rune
 	for {
-		if r := l.next(); r == '\n' || r == '`' {
-			l.emit(itemBacktick)
+		_ = l.next()
+		if rp = l.peek(); rp == '\n' {
+			l.emit(itemBlockq)
 			break
 		}
 	}
 	return lexText
 }
 
-func lexBlockq(l *lexer) stateFn {
-	l.start++
-	l.pos = l.start
-	resv := l.peek()
-	fmt.Println("RESV", string(resv))
-	if resv == ' ' {
-		fmt.Println("NOTIFICATION SQUAD")
-		l.start++
-	}
-	l.pos++
-	for {
-		if r := l.next(); r == '\n' || r == '`' {
-			l.emit(itemBlockq)
-			break
-		}
-	}
+func lexTilda(l *lexer) stateFn {
+	l.LexLRDelim('~')
 	return lexText
 }
 
@@ -94,6 +91,11 @@ func lexText(l *lexer) stateFn {
 				l.emit(itemText)
 			}
 			return lexBlockq
+		case current == '~':
+			if l.pos > l.start {
+				l.emit(itemText)
+			}
+			return lexTilda
 		case l.next() == eof:
 			if l.pos > l.start {
 				l.emit(itemText)
